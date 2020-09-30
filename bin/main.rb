@@ -10,10 +10,10 @@ board = [
 
 puts board.map {|x| x.join(" | ")}
 
+count_free_space = 9
 
 
-
-# #while something
+while count_free_space >= 0
 
   #PLAYER ONE INPUT
   puts "player 1 choose position: "
@@ -27,6 +27,7 @@ puts board.map {|x| x.join(" | ")}
   # board[player_1_row.to_i][player_1_column.to_i] = "x"
   if board[player_1_row.to_i][player_1_column.to_i] == "-"
       board[player_1_row.to_i][player_1_column.to_i] = "x"
+      count_free_space -= 1
   else 
     p "space already fill"
   end
@@ -45,9 +46,11 @@ puts board.map {|x| x.join(" | ")}
   player_2_column = gets.chomp
 
   #MODIFYING THE BOARD WITH PLAYER 1 INPUT
-  # board[player_2_row.to_i][player_2_column.to_i] = "o"
+
+  # now it will swap values
   if board[player_2_row.to_i][player_2_column.to_i] == "-" 
       board[player_2_row.to_i][player_2_column.to_i] = "o"
+      count_free_space -= 1
   else 
     p "space already fill"
   end
@@ -56,7 +59,7 @@ puts board.map {|x| x.join(" | ")}
   puts board.map {|x| x.join(" | ")}
   # your move has been display
 
-
+end
 
 # #   begin
 # #     #if there is a value in the position
