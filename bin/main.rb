@@ -10,9 +10,9 @@ board = [
 
 puts(board.map { |x| x.join(' | ') })
 
-count_free_space = 9
+game_status = true
 
-while count_free_space >= 1
+while game_status
 
   # Step 1 - GET PLAYER 1 INPUT
   puts 'player 1 choose position: '
@@ -34,7 +34,12 @@ while count_free_space >= 1
 
   # Step 6 - RE-PRINT THE BOARD WITH THE NEW VALUE
   puts(board.map { |x| x.join(' | ') })
-  # STEP 7 -CHECK IF PLAYER 1 IS THE WINNER, IF PLAYER 1 WIN RETURN RESULT, GAME END
+
+  # STEP 7 -CHECK IF PLAYER 1 IS THE WINNER
+  
+  #if player one wins or draw
+    puts "Player 1 wins!"
+    game_status = false
 
   # CHANGE OF PLAYERS
 
@@ -61,6 +66,13 @@ while count_free_space >= 1
 
   # STEP 13 -CHECK IF PLAYER 2 IS THE WINNER, IF PLAYER 2 WIN RETURN RESULT, GAME END
 
+  #if player two wins or draw
+    puts "Player 1 wins!"
+    game_status = false
+  
   # Step 14 - IF NO PLAYER WINS, MESSAGE GAME IS DRAW, GAME END
-
+  
+  #if players raw
+    puts "GAME WAS A DRAW!"
+    game_status = false
 end
