@@ -36,10 +36,10 @@ while game_status
   puts(board.map { |x| x.join(' | ') })
 
   # STEP 7 -CHECK IF PLAYER 1 IS THE WINNER
-  
-  #if player one wins or draw
-    puts "Player 1 wins!"
-    game_status = false
+
+  # if player one wins or draw
+  puts 'Player 1 wins!'
+  game_status = false
 
   # CHANGE OF PLAYERS
 
@@ -66,13 +66,13 @@ while game_status
 
   # STEP 13 -CHECK IF PLAYER 2 IS THE WINNER, IF PLAYER 2 WIN RETURN RESULT, GAME END
 
-  #if player two wins or draw
-    puts "Player 1 wins!"
-    game_status = false
-  
+  # if player two wins or draw
+  puts 'Player 1 wins!'
+  game_status = false
+
   # Step 14 - IF NO PLAYER WINS, MESSAGE GAME IS DRAW, GAME END
-  
-  #if players raw
-    puts "GAME WAS A DRAW!"
-    game_status = false
+
+  # if players raw
+  puts 'GAME WAS A DRAW!'
+  game_status = false
 end
