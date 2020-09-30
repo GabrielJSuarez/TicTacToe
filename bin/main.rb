@@ -3,12 +3,12 @@
 #Board
 
 board = [
-  [["x"], ["-"], ["-"]],
   [["-"], ["-"], ["-"]],
-  [["-"], ["-"], ["0"]]
+  [["-"], ["-"], ["-"]],
+  [["-"], ["-"], ["-"]]
 ]
-
-puts board.map {|x| x.join("|")}
+display = board.map {|x| x.join(" | ")}
+puts  display
 
 
 # #while something
@@ -21,12 +21,16 @@ puts board.map {|x| x.join("|")}
 #   player_1_column = gets.chomp
 
 #   #MODIFYING THE BOARD WITH PLAYER 1 INPUT
-#   board[player_1_row.to_i][player_1_column.to_i] = "x"
+#   if board[player_1_row.to_i][player_1_column.to_i] === "-"
+#       board[player_1_row.to_i][player_1_column.to_i] = "x"
+#   else 
+#     error "space already fill"
+#   end
 
 #   #RE-PRINT THE BOARD WITH THE NEW VALUE
-#   puts board[0]
-#   puts board[1]
-#   puts board[2]
+#   puts display
+#   your move has been display
+
 
   
 
@@ -39,12 +43,15 @@ puts board.map {|x| x.join("|")}
 #   player_2_column = gets.chomp
 
 #   #MODIFYING THE BOARD WITH PLAYER 1 INPUT
-#   board[player_2_row.to_i][player_2_column.to_i] = "o"
-
+#   if board[player_2_row.to_i][player_2_column.to_i] === "-" 
+#       board[player_2_row.to_i][player_2_column.to_i] = "o"
+#   else 
+#     error "space already fill"
+#   end
 #   #RE-PRINT THE BOARD WITH THE NEW VALUE
-#   puts board[0]
-#   puts board[1]
-#   puts board[2]
+#   puts display
+#   your move has been display
+
 
 
 # #   begin
