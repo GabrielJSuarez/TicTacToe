@@ -4,7 +4,7 @@
 
 class Display
 
-  attr_accessor :board, :users
+  attr_accessor :board, :name, :symbol
 
   @@board = [
     ['-', '-', '-'],
@@ -12,22 +12,19 @@ class Display
     ['-', '-', '-']
   ]
 
-  private
-  def self.board
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
+    
+  end
+
+  def self.table
     puts (@@board.map { |x| x.join(' | ') })
   end
 
-  def self.users
-    puts "Enter player's name"
-    player_name = gets.chomp
-    puts "Enter player's simbol"
-    player_simbol = gets.chomp
-  end
 end
 
-class UserInput
-
-  attr_reader :simbol
+class UserInput < Display
 
   def initialize(player, simbol)
     @player = player
@@ -44,9 +41,9 @@ class UserInput
 
   def check_input()
     if (@player_row <= "2" && @player_row >= "0") && (@player_column <= "2" && @player_column >= "0")
-      if board[@player_row.to_i][@player_column.to_i] == '-'
-        board[@player_row.to_i][@player_column.to_i] = 'x'
-        moves_left -= 1
+      if @@board[@player_row.to_i][@player_column.to_i] == '-'
+        @@board[@player_row.to_i][@player_column.to_i] = 'x'
+        @@moves_left -= 1
       else
         puts 'space already fill'
       end
@@ -57,47 +54,73 @@ class UserInput
 
 end
 
-# class GameLogic
+class GameLogic
 
-#   attr_accessor :game_status, :moves_left
+  attr_accessor :game_status, :moves_left
 
-#   @@game_status = true
-#   @@moves_left = 9
+  @@game_status = true
+  @@moves_left = 9
 
-#   winning_move_1_p1 = board[player_1_row.to_i].all?("x")
+  winning_move_1_p1 = board[player_1_row.to_i].all?("x")
 
-#   winning_move_2_p1 = [board[0][player_1_column.to_i], board[1][player_1_column.to_i], board[2][player_1_column.to_i]].all?("x")
+  winning_move_2_p1 = [board[0][player_1_column.to_i], board[1][player_1_column.to_i], board[2][player_1_column.to_i]].all?("x")
 
-#   winning_move_3_p1 = [board[0][0], board[1][1], board[2][2]].all?("x")
+  winning_move_3_p1 = [board[0][0], board[1][1], board[2][2]].all?("x")
 
-#   winning_move_4_p1 = [board[0][2], board[1][1], board[2][0]].all?("x")
+  winning_move_4_p1 = [board[0][2], board[1][1], board[2][0]].all?("x")
 
-#   def check_winner()
-#     if winning_move_1_p1 || winning_move_2_p1 || winning_move_3_p1 || winning_move_4_p1
-#       puts "Winner!"
-#       game_status = false
-#     elsif moves_left == 0
-#       puts "The game is a Draw!"
-#       game_status = false
-#     else
-#       puts "Next player's turn"
-#     end
-#   end
+  def check_winner()
+    if winning_move_1_p1 || winning_move_2_p1 || winning_move_3_p1 || winning_move_4_p1
+      puts "Winner!"
+      game_status = false
+    elsif moves_left == 0
+      puts "The game is a Draw!"
+      game_status = false
+    else
+      puts "Next player's turn"
+    end
+  end
   
   
   
-# end
+end
 
-player = Display.users
+module Executable
+  def get_input
+    puts "Player one name"
+    player_one_input = gets.chomp
+    puts "Player two name"
+    player_two_input = gets.chomp
+  end
+end
 
-p player.player_name
-# player_one = UserInput.new(player_name, player_simbol)
-# player_two = UserInput.new(player_name, player_simbol)
 
-# player_one_simbol = player_one.simbol
-# player_two_simbol = player_two.simbol
+#Playing the game
 
-Display.board
+def start_game()
+  #ask for inputs
+  get_input()
+  
+end
+
+
+
+
+
+player_one = Display.new(player_one_input, "x")
+player_two = Display.new(player_two_input, "o")
+
+
+player_one_input = UserInput.new(player_one.name, player_one.symbol)
+
+player_two_input = UserInput.new(player_two.name, player_two.symbol)
+
+Display.table
+
+player_one_input.ask_input
+player_one_input.check_input
+
+Display.table
 
 # while game_status
   
