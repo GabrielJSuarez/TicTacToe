@@ -10,69 +10,87 @@ board = [
 
 puts(board.map { |x| x.join(' | ') })
 
-game_status = 9
+game_status = true
 
-while game_status >= 1
+while game_status
+  moves_left = 9
+
   puts 'player 1 choose position: '
   puts 'player 1 choose line'
   player_1_row = gets.chomp 
-
   puts 'player 1 choose column'
   player_1_column = gets.chomp
 
-  unless (player_1_row <= "2" && player_1_row >= "0") && (player_1_column <= "2" && player_1_column >= "0")
+  if (player_1_row <= "2" && player_1_row >= "0") && (player_1_column <= "2" && player_1_column >= "0")
+    if board[player_1_row.to_i][player_1_column.to_i] == '-'
+      board[player_1_row.to_i][player_1_column.to_i] = 'x'
+      moves_left -= 1
+    else
+      puts 'space already fill'
+    end
+  else
     puts "not a valid position, try again!"
   end  
-  # Step 4 - MODIFYING THE BOARD WITH PLAYER 1 INPUT
-  if board[player_1_row.to_i][player_1_column.to_i] == '-'
-    board[player_1_row.to_i][player_1_column.to_i] = 'x'
-    game_status -= 1
-  else
-    # Step 5 - IF POSITION IS NOT VALID ASK FOR NEW POSITION
-    p 'space already fill'
-  end
 
-    # Step 6 - RE-PRINT THE BOARD WITH THE NEW VALUE
+  puts(board.map { |x| x.join(' | ') })
+
+
+
+  winning_move_1_p1 = board[player_1_row.to_i].all?("x")
+
+  winning_move_2_p1 = [board[0][player_1_column.to_i], board[1][player_1_column.to_i], board[2][player_1_column.to_i]].all?("x")
+
+  winning_move_3_p1 = [board[0][0], board[1][1], board[2][2]].all?("x")
+
+  winning_move_4_p1 = [board[0][2], board[1][1], board[2][0]].all?("x")
+
+  if winning_move_1_p1 || winning_move_2_p1 || winning_move_3_p1 || winning_move_4_p1
+    puts "Winner!"
+    game_status = false
+  else
+    puts "Next player's turn"
+  end
+  
+
+    # CHANGE OF PLAYERS
+ 
+    puts 'player 2 choose position: '
+    puts 'player 2 choose line'
+    player_2_row = gets.chomp
+    puts 'player 2 choose column'
+    player_2_column = gets.chomp
+
+    if (player_2_row <= "2" && player_2_row >= "0") && (player_2_column <= "2" && player_2_column >= "0")
+      if board[player_2_row.to_i][player_2_column.to_i] == '-'
+        board[player_2_row.to_i][player_2_column.to_i] = 'o'
+        moves_left -= 1
+      else
+        puts 'space already fill'
+      end
+    else
+      puts "not a valid position, try again!"
+    end  
+  
     puts(board.map { |x| x.join(' | ') })
 
-  #   # STEP 7 -CHECK IF PLAYER 1 IS THE WINNER
+    winning_move_1_p2 = board[player_1_row.to_i].all?("x")
 
-  #   # if player one wins or draw
-  #   puts 'Player 1 wins!'
-  #   game_status = false
+    winning_move_2_p2 = [board[0][player_1_column.to_i], board[1][player_1_column.to_i], board[2][player_1_column.to_i]].all?("x")
 
-  #   # CHANGE OF PLAYERS
+    winning_move_3_p2 = [board[0][0], board[1][1], board[2][2]].all?("x")
 
-  #   # Step 7 - GET PLAYER 2 INPUT
-  #   puts 'player 2 choose position: '
-  #   puts 'player 2 choose line'
-  #   player_2_row = gets.chomp
-  #   # Step 8 - CHECK IF ITS VALID INPUT
-  #   puts 'player 2 choose column'
-  #   player_2_column = gets.chomp
-  #   # Step 9 - CHECK IF ITS VALID INPUT
+    winning_move_4_p2 = [board[0][2], board[1][1], board[2][0]].all?("x")
 
-  #   # Step 10 - MODIFYING THE BOARD WITH PLAYER 2 INPUT
-  #   if board[player_2_row.to_i][player_2_column.to_i] == '-'
-  #     board[player_2_row.to_i][player_2_column.to_i] = 'o'
-  #     count_free_space -= 1
-  #   else
-  #     # Step 11 - IF POSITION IS NOT VALID ASK FOR NEW POSITION
-  #     p 'space already fill'
-  #   end
+    if winning_move_1_p2 || winning_move_2_p2 || winning_move_3_p2 || winning_move_4_p2
+      puts "Winner!"
+      game_status = false
+    else
+      puts "Next player's turn"
+    end
 
-  #   # Step 12 - RE-PRINT THE BOARD WITH THE NEW VALUE
-  #   puts(board.map { |x| x.join(' | ') })
+    if moves_left == 0
+      puts "The game is a Draw!"
+      game_status = false
+    end
 
-  #   # STEP 13 -CHECK IF PLAYER 2 IS THE WINNER, IF PLAYER 2 WIN RETURN RESULT, GAME END
-
-  #   # if player two wins or draw
-  #   puts 'Player 1 wins!'
-  #   game_status = false
-
-  #   # Step 14 - IF NO PLAYER WINS, MESSAGE GAME IS DRAW, GAME END
-
-  #   # if players raw
-  #   puts 'GAME WAS A DRAW!'
-  #   game_status = false
 end
