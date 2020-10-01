@@ -26,6 +26,8 @@ end
 
 class UserInput < Display
 
+  attr_accessor :player, :simbol
+
   def initialize(player, simbol)
     @player = player
     @simbol = simbol
@@ -42,8 +44,7 @@ class UserInput < Display
   def check_input()
     if (@player_row <= "2" && @player_row >= "0") && (@player_column <= "2" && @player_column >= "0")
       if @@board[@player_row.to_i][@player_column.to_i] == '-'
-        @@board[@player_row.to_i][@player_column.to_i] = 'x'
-        @@moves_left -= 1
+        @@board[@player_row.to_i][@player_column.to_i] = @simbol
       else
         puts 'space already fill'
       end
@@ -54,73 +55,105 @@ class UserInput < Display
 
 end
 
-class GameLogic
+class GameLogic < UserInput
 
   attr_accessor :game_status, :moves_left
+  
+  def initialize
+    @game_status = true
+    @moves_left = 9
 
-  @@game_status = true
-  @@moves_left = 9
+    @winning_move_1 = @@board[@player_row.to_i].all?(@simbol)
 
-  winning_move_1_p1 = board[player_1_row.to_i].all?("x")
+    @winning_move_2= [@@board[0][@player_column.to_i], @@board[1][@player_column.to_i], @@board[2][@player_column.to_i]].all?(@simbol)
+  
+    @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
+  
+    @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
+  end  
+  
+  # @winning_move_1 = @@board[@player_row.to_i].all?(@simbol)
 
-  winning_move_2_p1 = [board[0][player_1_column.to_i], board[1][player_1_column.to_i], board[2][player_1_column.to_i]].all?("x")
+  # @winning_move_2= [@@board[0][@player_column.to_i], @@board[1][@player_column.to_i], @@board[2][@player_column.to_i]].all?(@simbol)
 
-  winning_move_3_p1 = [board[0][0], board[1][1], board[2][2]].all?("x")
+  # @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
 
-  winning_move_4_p1 = [board[0][2], board[1][1], board[2][0]].all?("x")
+  # @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
 
   def check_winner()
-    if winning_move_1_p1 || winning_move_2_p1 || winning_move_3_p1 || winning_move_4_p1
+    if @winning_move_1 || @winning_move_2 || @winning_move_3 || @winning_move_4
       puts "Winner!"
-      game_status = false
-    elsif moves_left == 0
+      @game_status = false
+    elsif @moves_left == 0
       puts "The game is a Draw!"
-      game_status = false
+      @game_status = false
     else
       puts "Next player's turn"
+      @moves_left -=1
     end
   end
-  
-  
-  
 end
 
-module Executable
-  def get_input
-    puts "Player one name"
-    player_one_input = gets.chomp
-    puts "Player two name"
-    player_two_input = gets.chomp
-  end
-end
+# module Executable
+#   def get_input
+#     puts "Player one name"
+#     player_one_input = gets.chomp
+#     puts "Player two name"
+#     player_two_input = gets.chomp
+#   end
+# end
 
 
-#Playing the game
+# #Playing the game
 
-def start_game()
-  #ask for inputs
-  get_input()
+# def start_game()
+#   #ask for inputs
+#   get_input()
   
-end
+# end
+
+puts "Player one name"
+player_one_input = gets.chomp
+puts "Player two name"
+player_two_input = gets.chomp
 
 
-
-
+winner = GameLogic.new
 
 player_one = Display.new(player_one_input, "x")
 player_two = Display.new(player_two_input, "o")
-
 
 player_one_input = UserInput.new(player_one.name, player_one.symbol)
 
 player_two_input = UserInput.new(player_two.name, player_two.symbol)
 
-Display.table
+while winner.game_status
 
-player_one_input.ask_input
-player_one_input.check_input
+  Display.table
 
-Display.table
+  player_one_input.ask_input
+  player_one_input.check_input
+
+  Display.table
+
+  winner.check_winner()
+  if winner.game_status == false || winner.moves_left == 0
+    break
+  end
+
+  player_two_input.ask_input
+  player_two_input.check_input
+
+  Display.table
+
+  winner.check_winner()
+  if winner.game_status == false || winner.moves_left == 0
+    break
+  end
+end
+
+
+
 
 # while game_status
   
