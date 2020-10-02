@@ -39,8 +39,15 @@ class UserInput < Display
     @player_column = gets.chomp
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def check_play()
-    return if (@player_row.to_i <= 3 && @player_row.to_i >= 1 && @player_row.length.positive?) && (@player_column.to_i <= 3 && @player_column.to_i >= 1 && @player_column.length.positive?)
+    if (@player_row.to_i <= 3 && @player_row.to_i >= 1 && @player_row.length.positive?) &&
+       (@player_column.to_i <= 3 && @player_column.to_i >= 1 && @player_column.length.positive?)
+      return
+    end
+
+    # rubocop:enable Metrics/CyclomaticComplexity
+
     puts 'not a valid input, try again'
     ask_input
     check_play
