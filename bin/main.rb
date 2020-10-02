@@ -2,6 +2,7 @@
 
 # Board
 
+
 class Display
 
   attr_accessor :board, :simbol
@@ -92,57 +93,66 @@ class GameLogic < UserInput
   end
 end
 
+def play_game()
 
+  puts "Player one name"
+  player_one_name = gets.chomp
+  puts "Player two name"
+  player_two_name = gets.chomp
 
-puts "Player one name"
-player_one_name = gets.chomp
-puts "Player two name"
-player_two_name = gets.chomp
+  player_one = Display.new("x")
+  player_two = Display.new("o")
 
+  player_one_input = UserInput.new(player_one_name, player_one.simbol)
+  player_two_input = UserInput.new(player_two_name, player_two.simbol)
 
-winner = GameLogic.new()
+  winner = GameLogic.new()
 
-player_one = Display.new("x")
-player_two = Display.new("o")
+  play_game = true
 
-player_one_input = UserInput.new(player_one_name, player_one.simbol)
-
-player_two_input = UserInput.new(player_two_name, player_two.simbol)
-
-game_logic = GameLogic.new
-
-play_game = true
-
-while play_game
+  while play_game
   
-  Display.table
+    Display.table
+    
+    player_one_input.ask_input
+    player_one_input.check_play
+    player_one_input.player_move(player_one.simbol)
+
+    Display.table
   
-  player_one_input.ask_input
-  player_one_input.check_play
-  player_one_input.player_move(player_one.simbol)
-  Display.table
-
-  winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
-
-  if winner.game_status == false
-    play_game = winner.game_status
-    break
-  end
-
-  player_two_input.ask_input
-  player_two_input.check_play
-  player_two_input.player_move(player_two.simbol)
-  Display.table
+    winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
+    if winner.game_status == false
+      play_game = winner.game_status
+      break
+    end
   
-
-  winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
-
-  if winner.game_status == false
-    play_game = winner.game_status
-    break
+    player_two_input.ask_input
+    player_two_input.check_play
+    player_two_input.player_move(player_two.simbol)
+    Display.table
+    
+  
+    winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
+  
+    if winner.game_status == false
+      play_game = winner.game_status
+      break
+    end
   end
 
 end
+
+play_game()
+
+
+
+
+
+
+
+
+
+
 
 
 
