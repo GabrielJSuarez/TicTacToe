@@ -27,7 +27,6 @@ class UserInput < Display
 
   def initialize(player, simbol)
     @player = player
-    @simbol = simbol
     @player_row = ""
     @player_column = ""
   end
@@ -35,21 +34,28 @@ class UserInput < Display
   def ask_input()
     puts "#{@player}, make your move: "
     puts "#{@player} chooses row"
-    @player_row = gets.chomp 
+    @player_row = gets.chomp.to_i 
     puts "#{@player} chooses column"
-    @player_column = gets.chomp
+    @player_column = gets.chomp.to_i 
   end
 
-  def check_input()
-    if (@player_row <= "2" && @player_row >= "0") && (@player_column <= "2" && @player_column >= "0")
-      if @@board[@player_row.to_i][@player_column.to_i] == '-'
-        @@board[@player_row.to_i][@player_column.to_i] = @simbol
-      else
-        puts 'space already fill'
-      end
+  def check_play()
+    unless (@player_row <= 2 && @player_row >= 0) && (@player_column <= 2 && @player_column >= 0)
+      puts "not a valid input, try again"
+      ask_input()
+      check_play()
+    end
+  end
+
+  def player_move(simbol)
+    if @@board[@player_row][@player_column] == '-'
+      @@board[@player_row][@player_column] = simbol
     else
-      puts "not a valid position, next player turn!"
-    end  
+      puts 'space already fill'
+      ask_input()
+      check_play()
+      player_move(simbol)
+    end
   end
 
 end
@@ -60,21 +66,13 @@ class GameLogic < UserInput
   
   def initialize ()
     @game_status = true
-    @moves_left = 9
-
-    # @winning_move_1 = @@board[@row].all?("x")
-
-    # @winning_move_2= [@@board[0][@column.to_i], @@board[1][@column.to_i], @@board[2][@column.to_i]].all?(@simbol)
-  
-    # @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
-  
-    # @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
   end  
+
   def check_winner(row, column, simbol)
 
-    @winning_move_1 = @@board[row.to_i].all?(simbol)
+    @winning_move_1 = @@board[row].all?(simbol)
 
-    @winning_move_2= [@@board[0][column.to_i], @@board[1][column.to_i], @@board[2][column.to_i]].all?(simbol)
+    @winning_move_2= [@@board[0][column], @@board[1][column], @@board[2][column]].all?(simbol)
 
     @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(simbol)
 
@@ -84,33 +82,17 @@ class GameLogic < UserInput
     if @winning_move_1 || @winning_move_2 || @winning_move_3 || @winning_move_4
       puts "Winner!"
       @game_status = false
-    elsif @moves_left == 0
+    elsif @@board[0].include?("-") || @@board[1].include?("-") || @@board[2].include?("-")
+      puts "Next player's turn"
+      
+    else
       puts "The game is a Draw!"
       @game_status = false
-    else
-      puts "Next player's turn"
-      @moves_left -= 1
     end
   end
 end
 
-# module Executable
-#   def get_input
-#     puts "Player one name"
-#     player_one_input = gets.chomp
-#     puts "Player two name"
-#     player_two_input = gets.chomp
-#   end
-# end
 
-
-# #Playing the game
-
-# def start_game()
-#   #ask for inputs
-#   get_input()
-  
-# end
 
 puts "Player one name"
 player_one_name = gets.chomp
@@ -134,23 +116,33 @@ play_game = true
 while play_game
   
   Display.table
-
+  
   player_one_input.ask_input
-  player_one_input.check_input
+  player_one_input.check_play
+  player_one_input.player_move(player_one.simbol)
   Display.table
 
-  winner.check_winner( player_one_input.player_row, player_one_input.player_column, player_one.simbol )
+  winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
+
+  if winner.game_status == false
+    play_game = winner.game_status
+    break
+  end
 
   player_two_input.ask_input
-  player_two_input.check_input
+  player_two_input.check_play
+  player_two_input.player_move(player_two.simbol)
   Display.table
+  
 
+  winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
 
-  winner.check_winner( player_two_input.player_row, player_two_input.player_column, player_two.simbol )
+  if winner.game_status == false
+    play_game = winner.game_status
+    break
+  end
 
 end
 
 
-
-end
 
