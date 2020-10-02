@@ -4,18 +4,15 @@
 
 class Display
 
-  attr_accessor :board, :name, :symbol
+  attr_accessor :board, :simbol
 
   @@board = [
     ['-', '-', '-'],
     ['-', '-', '-'],
     ['-', '-', '-']
   ]
-
-  def initialize(name, symbol)
-    @name = name
-    @symbol = symbol
-    
+  def initialize (simbol)
+    @simbol = simbol
   end
 
   def self.table
@@ -26,11 +23,13 @@ end
 
 class UserInput < Display
 
-  attr_accessor :player, :simbol
+  attr_accessor :player, :simbol, :player_row, :player_column
 
   def initialize(player, simbol)
     @player = player
     @simbol = simbol
+    @player_row = ""
+    @player_column = ""
   end
 
   def ask_input()
@@ -59,28 +58,29 @@ class GameLogic < UserInput
 
   attr_accessor :game_status, :moves_left
   
-  def initialize
+  def initialize ()
     @game_status = true
     @moves_left = 9
 
-    @winning_move_1 = @@board[@player_row.to_i].all?(@simbol)
+    # @winning_move_1 = @@board[@row].all?("x")
 
-    @winning_move_2= [@@board[0][@player_column.to_i], @@board[1][@player_column.to_i], @@board[2][@player_column.to_i]].all?(@simbol)
+    # @winning_move_2= [@@board[0][@column.to_i], @@board[1][@column.to_i], @@board[2][@column.to_i]].all?(@simbol)
   
-    @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
+    # @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
   
-    @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
+    # @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
   end  
+  def check_winner(row, column, simbol)
+
+    @winning_move_1 = @@board[row.to_i].all?(simbol)
+
+    @winning_move_2= [@@board[0][column.to_i], @@board[1][column.to_i], @@board[2][column.to_i]].all?(simbol)
+
+    @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(simbol)
+
+    @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(simbol)
+
   
-  # @winning_move_1 = @@board[@player_row.to_i].all?(@simbol)
-
-  # @winning_move_2= [@@board[0][@player_column.to_i], @@board[1][@player_column.to_i], @@board[2][@player_column.to_i]].all?(@simbol)
-
-  # @winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
-
-  # @winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
-
-  def check_winner()
     if @winning_move_1 || @winning_move_2 || @winning_move_3 || @winning_move_4
       puts "Winner!"
       @game_status = false
@@ -113,19 +113,19 @@ end
 # end
 
 puts "Player one name"
-player_one_input = gets.chomp
+player_one_name = gets.chomp
 puts "Player two name"
-player_two_input = gets.chomp
+player_two_name = gets.chomp
 
 
-winner = GameLogic.new
+winner = GameLogic.new()
 
-player_one = Display.new(player_one_input, "x")
-player_two = Display.new(player_two_input, "o")
+player_one = Display.new("x")
+player_two = Display.new("o")
 
-player_one_input = UserInput.new(player_one.name, player_one.symbol)
+player_one_input = UserInput.new(player_one_name, player_one.simbol)
 
-player_two_input = UserInput.new(player_two.name, player_two.symbol)
+player_two_input = UserInput.new(player_two_name, player_two.simbol)
 
 while winner.game_status
 
@@ -133,23 +133,17 @@ while winner.game_status
 
   player_one_input.ask_input
   player_one_input.check_input
-
   Display.table
 
-  winner.check_winner()
-  if winner.game_status == false || winner.moves_left == 0
-    break
-  end
+  winner.check_winner( player_one_input.player_row, player_one_input.player_column, player_one.simbol )
 
   player_two_input.ask_input
   player_two_input.check_input
-
   Display.table
 
-  winner.check_winner()
-  if winner.game_status == false || winner.moves_left == 0
-    break
-  end
+
+  winner.check_winner( player_two_input.player_row, player_two_input.player_column, player_two.simbol )
+
 end
 
 
