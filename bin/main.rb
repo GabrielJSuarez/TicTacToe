@@ -48,7 +48,7 @@ class UserInput < Display
         puts 'space already fill'
       end
     else
-      puts "not a valid position, try again!"
+      puts "not a valid position, next player turn!"
     end  
   end
 
@@ -82,6 +82,22 @@ class GameLogic < UserInput
 
   
     if @winning_move_1 || @winning_move_2 || @winning_move_3 || @winning_move_4
+
+  @@winning_move_1 = @@board[@player_row.to_i].all?(@simbol)
+
+  @@winning_move_2 = [@@board[0][@player_column.to_i], @@board[1][@player_column.to_i], @@board[2][@player_column.to_i]].all?(@simbol)
+  
+  @@winning_move_3 = [@@board[0][0], @@board[1][1], @@board[2][2]].all?(@simbol)
+  
+  @@winning_move_4 = [@@board[0][2], @@board[1][1], @@board[2][0]].all?(@simbol)
+  
+  def initialize
+    @game_status = true
+    @moves_left = 8
+  end  
+
+  def check_winner()
+    if @@winning_move_1 || @@winning_move_2 || @@winning_move_3 || @@winning_move_4
       puts "Winner!"
       @game_status = false
     elsif @moves_left == 0
@@ -89,7 +105,7 @@ class GameLogic < UserInput
       @game_status = false
     else
       puts "Next player's turn"
-      @moves_left -=1
+      @moves_left -= 1
     end
   end
 end
@@ -126,9 +142,18 @@ player_two = Display.new("o")
 player_one_input = UserInput.new(player_one_name, player_one.simbol)
 
 player_two_input = UserInput.new(player_two_name, player_two.simbol)
+player_one = Display.new(player_one_input, "x")
+player_two = Display.new(player_two_input, "o")
 
-while winner.game_status
+player_one_input = UserInput.new(player_one.name, player_one.symbol)
+player_two_input = UserInput.new(player_two.name, player_two.symbol)
 
+game_logic = GameLogic.new
+
+play_game = true
+
+while play_game
+  
   Display.table
 
   player_one_input.ask_input
@@ -136,6 +161,12 @@ while winner.game_status
   Display.table
 
   winner.check_winner( player_one_input.player_row, player_one_input.player_column, player_one.simbol )
+  game_logic.check_winner
+
+  if game_logic.game_status == false
+    play_game = game_logic.game_status
+    break
+  end
 
   player_two_input.ask_input
   player_two_input.check_input
@@ -147,8 +178,12 @@ while winner.game_status
 end
 
 
+  game_logic.check_winner
 
+  if game_logic.game_status == false
+    play_game = game_logic.game_status
+    break
+  end
 
-# while game_status
-  
-# end
+end
+
