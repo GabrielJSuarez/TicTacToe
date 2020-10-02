@@ -5,11 +5,14 @@
 class Display
   attr_accessor :board, :simbol
 
+  # rubocop:disable Style/ClassVars
   @@board = [
     ['-', '-', '-'],
     ['-', '-', '-'],
     ['-', '-', '-']
   ]
+  # rubocop:enable Style/ClassVars
+
   def initialize(simbol)
     @simbol = simbol
   end
@@ -63,6 +66,8 @@ class GameLogic < UserInput
     @game_status = true
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def check_winner(row, column, simbol)
     @winningmove1 = @@board[row].all?(simbol)
 
@@ -82,6 +87,8 @@ class GameLogic < UserInput
       @game_status = false
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 end
 
 def define_name
@@ -107,6 +114,7 @@ def define_inputs(pl1, pl2, simb1, simb2)
   [player_one_input, player_two_input]
 end
 
+# rubocop:disable Metrics/MethodLength
 def game_loop(player_one_input, player_two_input, player_one, player_two, winner)
   play_game = true
   while play_game
@@ -136,6 +144,7 @@ def game_loop(player_one_input, player_two_input, player_one, player_two, winner
     end
   end
 end
+# rubocop:enable Metrics/MethodLength
 
 def play_game()
   player1_name, player2_name = define_name
