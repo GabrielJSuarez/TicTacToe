@@ -7,7 +7,12 @@ def define_name
   player_one_name = gets.chomp
   puts 'Player two name'
   player_two_name = gets.chomp
-  [player_one_name, player_two_name]
+  if player_one_name.length.positive? && player_two_name.length.positive?
+    [player_one_name, player_two_name]
+  else
+    puts "Can't leave your name empty!, now you both need to enter the name again, you fool!"
+    define_name()
+  end
 end
 
 def define_simbol
