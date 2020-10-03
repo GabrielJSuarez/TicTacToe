@@ -35,14 +35,11 @@ class UserInput < Display
     @player_column = gets.chomp
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def check_play()
     if (@player_row.to_i <= 3 && @player_row.to_i >= 1 && @player_row.length.positive?) &&
        (@player_column.to_i <= 3 && @player_column.to_i >= 1 && @player_column.length.positive?)
       return
     end
-
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     puts 'not a valid input, try again'
     ask_input
@@ -92,49 +89,3 @@ class GameLogic < UserInput
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
 end
-
-def define_simbol
-  player_one = Display.new('x')
-  player_two = Display.new('o')
-
-  [player_one, player_two]
-end
-
-def define_inputs(pl1, pl2, simb1, simb2)
-  player_one_input = UserInput.new(pl1, simb1.simbol)
-  player_two_input = UserInput.new(pl2, simb2.simbol)
-
-  [player_one_input, player_two_input]
-end
-
-# rubocop:disable Metrics/MethodLength
-def game_loop(player_one_input, player_two_input, player_one, player_two, winner)
-  play_game = true
-  while play_game
-
-    player_one_input.ask_input
-    player_one_input.check_play
-    player_one_input.player_move(player_one.simbol)
-
-    Display.table
-
-    winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
-    if winner.game_status == false
-      play_game = winner.game_status
-      break
-    end
-
-    player_two_input.ask_input
-    player_two_input.check_play
-    player_two_input.player_move(player_two.simbol)
-    Display.table
-
-    winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
-
-    if winner.game_status == false
-      play_game = winner.game_status
-      break
-    end
-  end
-end
-# rubocop:enable Metrics/MethodLength
