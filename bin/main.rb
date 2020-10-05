@@ -20,7 +20,9 @@ module UserInputs
     player_row = gets.chomp
     puts 'Enter the column: '
     player_column = gets.chomp
-    if (player_row.to_i >= 1 && player_row.to_i <= 3 && player_row.length.positive?) && (player_column.to_i >= 1 && player_column.to_i <= 3 && player_column.length.positive?)
+    con1 = player_row.length.positive? && (1..3).include?(player_row.to_i)
+    con2 = player_column.length.positive? && (1..3).include?(player_column.to_i)
+    if con1 && con2
       [player_row, player_column]
     else
       puts 'Wrong input, try entering numbers from 1 to 3'
@@ -33,8 +35,8 @@ module UserInputs
       board[p_row.to_i - 1][p_column.to_i - 1] = simbol
     else
       puts 'space already fill'
-      ask_play(player)
-      player_move(board, simbol, p_row, p_column, player)
+      pr, pc = ask_play(player)
+      player_move(board, simbol, pr, pc, player)
     end
   end
 end
@@ -61,12 +63,13 @@ module PlayGame
       p1_row, p1_column = ask_play(p1_name)
       player_move(board, 'x', p1_row, p1_column, p1_name)
       winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
+      drawp1 = winner.check_draw(board, p1_row, p1_column, 'x')
       if winnerp1 == true
         game_status = false
         puts "#{p1_name} wins this round!"
         puts new_game.tabletop
         break
-      elsif winnerp1 == false
+      elsif drawp1 == true
         game_status = false
         puts 'Draw!'
         puts new_game.tabletop
@@ -78,12 +81,13 @@ module PlayGame
       p2_row, p2_column = ask_play(p2_name)
       player_move(board, 'o', p2_row, p2_column, p2_name)
       winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
+      drawp2 = winner.check_draw(board, p2_row, p2_column, 'x')
       if winnerp2 == true
         game_status = false
         puts "#{p2_name} wins this round!"
         puts new_game.tabletop
         break
-      elsif winnerp2 == false
+      elsif drawp2 == true
         game_status = false
         puts 'Draw!'
         puts new_game.tabletop
