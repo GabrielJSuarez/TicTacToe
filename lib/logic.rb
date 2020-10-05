@@ -52,5 +52,4 @@ class GameLogic
 
     false if row1 || row2 || row3
   end
-
 end
