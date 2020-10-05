@@ -2,30 +2,36 @@
 
 require './lib/logic'
 
-def define_name
-  puts 'Player one name'
-  player_one_name = gets.chomp
-  puts 'Player two name'
-  player_two_name = gets.chomp
-  if player_one_name.length.positive? && player_two_name.length.positive?
-    [player_one_name, player_two_name]
-  else
-    puts "Can't leave your name empty!, now you both need to enter the name again, you fool!"
-    define_name()
+module UserInputs
+
+  def ask_name(num)
+    puts "Player #{num}'s name"
+    player_name = gets.chomp
+    if player_name.length.zero?
+      puts "Don't leave your name empty"
+      ask_name(num)
+    else
+      player_name
+    end
   end
+
+  def ask_play(name)
+    puts "#{name}, please enter your move: "
+    puts 'Enter the row: '
+    player_row = gets.chomp
+    puts 'Enter the column: '
+    player_column = gets.chomp
+    if (player_row.to_i >= 0 && player_row.to_i <= 2 && player_row.length.positive?) && (player_column.to_i >= 0 && player_column.to_i <= 2 && player_column.length.positive?)
+      [player_row, player_column]
+    else
+      puts 'Wrong input, try entering numbers from 0 to 2'
+      ask_play(name)
+    end
+  end
+
 end
 
-def define_simbol
-  player_one = Display.new('x')
-  player_two = Display.new('o')
-  [player_one, player_two]
-end
-
-def define_inputs(pl1, pl2, simb1, simb2)
-  player_one_input = UserInput.new(pl1, simb1.simbol)
-  player_two_input = UserInput.new(pl2, simb2.simbol)
-  [player_one_input, player_two_input]
-end
+include UserInputs
 
 # rubocop:disable Metrics/MethodLength
 def game_loop(player_one_input, player_two_input, player_one, player_two, winner)
@@ -36,9 +42,9 @@ def game_loop(player_one_input, player_two_input, player_one, player_two, winner
     player_one_input.check_play
     player_one_input.player_move(player_one.simbol)
 
-    Display.table
+    puts Display.table
 
-    winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
+    puts winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
     if winner.game_status == false
       play_game = winner.game_status
       break
@@ -47,9 +53,9 @@ def game_loop(player_one_input, player_two_input, player_one, player_two, winner
     player_two_input.ask_input
     player_two_input.check_play
     player_two_input.player_move(player_two.simbol)
-    Display.table
+    puts Display.table
 
-    winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
+    puts winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
 
     if winner.game_status == false
       play_game = winner.game_status
@@ -66,7 +72,7 @@ def play_game()
 
   winner = GameLogic.new
 
-  Display.table
+  puts Display.table
 
   game_loop(player_one_input, player_two_input, player_one, player_two, winner)
 end
