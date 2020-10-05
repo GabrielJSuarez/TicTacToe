@@ -50,31 +50,40 @@ module PlayGame
     sleep 2
   end
 
-  def new_round()
+  def create_variables()
     new_game = Display.new
+    winner = GameLogic.new
     board = new_game.board
     puts new_game.tabletop
-    winner = GameLogic.new
-    game_status = winner.game_status
     p1_name = ask_name('One')
     p2_name = ask_name('Two')
+    game_status = winner.game_status
+    [new_game, winner, board, p1_name, p2_name, game_status]
+  end
+
+  def break_game(new_game, winner, draw, name)
+    if winner == true
+      puts "#{name} wins this round!"
+      puts new_game.tabletop
+      true
+    elsif draw == true
+      puts 'Draw!'
+      puts new_game.tabletop
+      true
+    end
+  end
+
+  def new_round()
+    new_game, winner, board, p1_name, p2_name, game_status = create_variables
+
+    puts new_game.tabletop
 
     while game_status
       p1_row, p1_column = ask_play(p1_name)
       player_move(board, 'x', p1_row, p1_column, p1_name)
       winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
       drawp1 = winner.check_draw(board, p1_row, p1_column, 'x')
-      if winnerp1 == true
-        game_status = false
-        puts "#{p1_name} wins this round!"
-        puts new_game.tabletop
-        break
-      elsif drawp1 == true
-        game_status = false
-        puts 'Draw!'
-        puts new_game.tabletop
-        break
-      end
+      break if break_game(new_game, winnerp1, drawp1, p1_name)
       puts "Nex player's turn!"
       puts new_game.tabletop
 
@@ -82,17 +91,7 @@ module PlayGame
       player_move(board, 'o', p2_row, p2_column, p2_name)
       winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
       drawp2 = winner.check_draw(board, p2_row, p2_column, 'x')
-      if winnerp2 == true
-        game_status = false
-        puts "#{p2_name} wins this round!"
-        puts new_game.tabletop
-        break
-      elsif drawp2 == true
-        game_status = false
-        puts 'Draw!'
-        puts new_game.tabletop
-        break
-      end
+      break if break_game(new_game, winnerp2, drawp2, p2_name)
       puts "Nex player's turn!"
       puts new_game.tabletop
     end
