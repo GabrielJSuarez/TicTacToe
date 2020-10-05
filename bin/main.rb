@@ -84,6 +84,7 @@ module PlayGame
       winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
       drawp1 = winner.check_draw(board, p1_row, p1_column, 'x')
       break if break_game(new_game, winnerp1, drawp1, p1_name)
+
       puts "Nex player's turn!"
       puts new_game.tabletop
 
@@ -92,6 +93,7 @@ module PlayGame
       winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
       drawp2 = winner.check_draw(board, p2_row, p2_column, 'x')
       break if break_game(new_game, winnerp2, drawp2, p2_name)
+      
       puts "Nex player's turn!"
       puts new_game.tabletop
     end
