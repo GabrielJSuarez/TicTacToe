@@ -15,7 +15,7 @@ class Display
 end
 
 
-class GameLogic < UserInput
+class GameLogic
   attr_reader :game_status
 
   def initialize()
@@ -24,6 +24,8 @@ class GameLogic < UserInput
 
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
+
+
   def check_winner(board, row, column, simbol)
     winner = nil
 

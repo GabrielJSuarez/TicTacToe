@@ -36,7 +36,7 @@ class Display
       if (player_row.to_i >= 0 && player_row.to_i <= 2 && player_row.length.positive?) && (player_column.to_i >= 0 && player_column.to_i <= 2 && player_column.length.positive?)
         [player_row, player_column]
       else
-        puts 'Wrong input, try entering numbers from 0 to 2'
+        'Wrong input, try entering numbers from 0 to 2'
         ask_play(name)
       end
     end
