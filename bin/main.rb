@@ -3,7 +3,6 @@
 require './lib/logic'
 
 module UserInputs
-
   def ask_name(num)
     puts "Player #{num}'s name"
     player_name = gets.chomp
@@ -21,118 +20,100 @@ module UserInputs
     player_row = gets.chomp
     puts 'Enter the column: '
     player_column = gets.chomp
-    if (player_row.to_i >= 0 && player_row.to_i <= 2 && player_row.length.positive?) && (player_column.to_i >= 0 && player_column.to_i <= 2 && player_column.length.positive?)
+    if (player_row.to_i >= 1 && player_row.to_i <= 3 && player_row.length.positive?) && (player_column.to_i >= 1 && player_column.to_i <= 3 && player_column.length.positive?)
       [player_row, player_column]
     else
-      puts 'Wrong input, try entering numbers from 0 to 2'
+      puts 'Wrong input, try entering numbers from 1 to 3'
       ask_play(name)
     end
   end
 
-  def player_move(board, simbol, p_row, p_column)
-    if board[p_row.to_i][p_column.to_i] == '-'
-      board[p_row.to_i][p_column.to_i] = simbol
+  def player_move(board, simbol, p_row, p_column, player)
+    if board[p_row.to_i - 1][p_column.to_i - 1] == '-'
+      board[p_row.to_i - 1][p_column.to_i - 1] = simbol
     else
       puts 'space already fill'
-      ask_play(name)
-      player_move(board, simbol, p_row, p_column)
+      ask_play(player)
+      player_move(board, simbol, p_row, p_column, player)
+    end
+  end
+end
+
+module PlayGame
+  def greeting_msg()
+    puts "Hello!, Let's play some Tic Tac Toe"
+    puts 'Rules are simple, whichever player that makes a line in 3 spaces wins!'
+    puts 'You can place your move in the table by selecting a space between 1 & 3 for rows and columns'
+    puts 'LET THE GAME BEGIN'
+    sleep 2
+  end
+
+  def new_round()
+    new_game = Display.new
+    board = new_game.board
+    puts new_game.tabletop
+    winner = GameLogic.new
+    game_status = winner.game_status
+    p1_name = ask_name('One')
+    p2_name = ask_name('Two')
+
+    while game_status
+      p1_row, p1_column = ask_play(p1_name)
+      player_move(board, 'x', p1_row, p1_column, p1_name)
+      winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
+      if winnerp1 == true
+        game_status = false
+        puts "#{p1_name} wins this round!"
+        puts new_game.tabletop
+        break
+      elsif winnerp1 == false
+        game_status = false
+        puts 'Draw!'
+        puts new_game.tabletop
+        break
+      end
+      puts "Nex player's turn!"
+      puts new_game.tabletop
+
+      p2_row, p2_column = ask_play(p2_name)
+      player_move(board, 'o', p2_row, p2_column, p2_name)
+      winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
+      if winnerp2 == true
+        game_status = false
+        puts "#{p2_name} wins this round!"
+        puts new_game.tabletop
+        break
+      elsif winnerp2 == false
+        game_status = false
+        puts 'Draw!'
+        puts new_game.tabletop
+        break
+      end
+      puts "Nex player's turn!"
+      puts new_game.tabletop
     end
   end
 
-end
-
-include UserInputs
-
-# rubocop:disable Metrics/MethodLength
-
-def mod_board()
-  winner = GameLogic.new
-  new_game = Display.new
-  board = new_game.board
-  puts new_game.tabletop()
-  game_status = true
-  p1_name = ask_name('One')
-  p2_name = ask_name('Two')
-
-  while game_status
-    p1_row, p1_column = ask_play(p1_name)
-    player_move(board, 'x', p1_row, p1_column) 
-    winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
-    if winnerp1 == true
-      game_status = false
-      puts "Winner!"
-      puts new_game.tabletop()
-      break
-    elsif winnerp1 == false
-      game_status = false
-      puts "Draw!"
-      puts new_game.tabletop()
-      break
+  def start_game()
+    greeting_msg
+    new_round
+    puts 'Want to play another round? y/n'
+    another_round = gets.chomp
+    if another_round == 'y'
+      new_round
+    else
+      puts 'See you next time!'
     end
-    puts "Nex player's turn!"
-    puts new_game.tabletop()
-
-    p2_row, p2_column = ask_play(p2_name)
-    player_move(board, 'o', p2_row, p2_column)
-    winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
-    if winnerp2 == true
-      game_status = false
-      puts "Winner!"
-      puts new_game.tabletop()
-      break
-    elsif winnerp2 == false
-      game_status = false
-      puts "Draw!"
-      puts new_game.tabletop()
-      break
-    end
-    puts "Nex player's turn!"
-    puts new_game.tabletop()
   end
 end
-# def game_loop(player_one_input, player_two_input, player_one, player_two, winner)
-#   play_game = true
-#   while play_game
 
-#     player_one_input.ask_input
-#     player_one_input.check_play
-#     player_one_input.player_move(player_one.simbol)
+class GameNew
+  include UserInputs
+  include PlayGame
 
-#     puts Display.table
+  def game()
+    start_game
+  end
+end
 
-#     puts winner.check_winner(player_one_input.player_row, player_one_input.player_column, player_one.simbol)
-#     if winner.game_status == false
-#       play_game = winner.game_status
-#       break
-#     end
-
-#     player_two_input.ask_input
-#     player_two_input.check_play
-#     player_two_input.player_move(player_two.simbol)
-#     puts Display.table
-
-#     puts winner.check_winner(player_two_input.player_row, player_two_input.player_column, player_two.simbol)
-
-#     if winner.game_status == false
-#       play_game = winner.game_status
-#       break
-#     end
-#   end
-# end
-# # rubocop:enable Metrics/MethodLength
-
-# def play_game()
-#   player1_name, player2_name = define_name
-#   player_one, player_two = define_simbol
-#   player_one_input, player_two_input = define_inputs(player1_name, player2_name, player_one, player_two)
-
-#   winner = GameLogic.new
-
-#   puts Display.table
-
-#   game_loop(player_one_input, player_two_input, player_one, player_two, winner)
-# end
-
-# play_game
-
-mod_board()
+GameNew.new.game
