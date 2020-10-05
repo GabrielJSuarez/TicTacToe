@@ -1,78 +1,124 @@
 #!/usr/bin/env ruby
 
-# Board
+require './lib/logic'
 
-board = [
-  ['-', '-', '-'],
-  ['-', '-', '-'],
-  ['-', '-', '-']
-]
-
-puts(board.map { |x| x.join(' | ') })
-
-game_status = true
-
-while game_status
-
-  # Step 1 - GET PLAYER 1 INPUT
-  puts 'player 1 choose position: '
-  puts 'player 1 choose line'
-  player_1_row = gets.chomp
-  # Step 2 - CHECK IF ITS VALID INPUT
-  puts 'player 1 choose column'
-  player_1_column = gets.chomp
-  # Step 3 - CHECK IF ITS VALID INPUT
-
-  # Step 4 - MODIFYING THE BOARD WITH PLAYER 1 INPUT
-  if board[player_1_row.to_i][player_1_column.to_i] == '-'
-    board[player_1_row.to_i][player_1_column.to_i] = 'x'
-    count_free_space -= 1
-  else
-    # Step 5 - IF POSITION IS NOT VALID ASK FOR NEW POSITION
-    p 'space already fill'
+module UserInputs
+  def ask_name(num)
+    puts "Player #{num}'s name"
+    player_name = gets.chomp
+    if player_name.length.zero?
+      puts "Don't leave your name empty"
+      ask_name(num)
+    else
+      player_name
+    end
   end
 
-  # Step 6 - RE-PRINT THE BOARD WITH THE NEW VALUE
-  puts(board.map { |x| x.join(' | ') })
-
-  # STEP 7 -CHECK IF PLAYER 1 IS THE WINNER
-
-  # if player one wins or draw
-  puts 'Player 1 wins!'
-  game_status = false
-
-  # CHANGE OF PLAYERS
-
-  # Step 7 - GET PLAYER 2 INPUT
-  puts 'player 2 choose position: '
-  puts 'player 2 choose line'
-  player_2_row = gets.chomp
-  # Step 8 - CHECK IF ITS VALID INPUT
-  puts 'player 2 choose column'
-  player_2_column = gets.chomp
-  # Step 9 - CHECK IF ITS VALID INPUT
-
-  # Step 10 - MODIFYING THE BOARD WITH PLAYER 2 INPUT
-  if board[player_2_row.to_i][player_2_column.to_i] == '-'
-    board[player_2_row.to_i][player_2_column.to_i] = 'o'
-    count_free_space -= 1
-  else
-    # Step 11 - IF POSITION IS NOT VALID ASK FOR NEW POSITION
-    p 'space already fill'
+  def ask_play(name)
+    puts "#{name}, please enter your move: "
+    puts 'Enter the row: '
+    player_row = gets.chomp
+    puts 'Enter the column: '
+    player_column = gets.chomp
+    con1 = player_row.length.positive? && (1..3).include?(player_row.to_i)
+    con2 = player_column.length.positive? && (1..3).include?(player_column.to_i)
+    if con1 && con2
+      [player_row, player_column]
+    else
+      puts 'Wrong input, try entering numbers from 1 to 3'
+      ask_play(name)
+    end
   end
 
-  # Step 12 - RE-PRINT THE BOARD WITH THE NEW VALUE
-  puts(board.map { |x| x.join(' | ') })
-
-  # STEP 13 -CHECK IF PLAYER 2 IS THE WINNER, IF PLAYER 2 WIN RETURN RESULT, GAME END
-
-  # if player two wins or draw
-  puts 'Player 1 wins!'
-  game_status = false
-
-  # Step 14 - IF NO PLAYER WINS, MESSAGE GAME IS DRAW, GAME END
-
-  # if players raw
-  puts 'GAME WAS A DRAW!'
-  game_status = false
+  def player_move(board, simbol, p_row, p_column, player)
+    if board[p_row.to_i - 1][p_column.to_i - 1] == '-'
+      board[p_row.to_i - 1][p_column.to_i - 1] = simbol
+    else
+      puts 'space already fill'
+      pr, pc = ask_play(player)
+      player_move(board, simbol, pr, pc, player)
+    end
+  end
 end
+
+module PlayGame
+  def greeting_msg()
+    puts "Hello!, Let's play some Tic Tac Toe"
+    puts 'Rules are simple, whichever player that makes a line in 3 spaces wins!'
+    puts 'You can place your move in the table by selecting a space between 1 & 3 for rows and columns'
+    puts 'LET THE GAME BEGIN'
+    sleep 2
+  end
+
+  def create_variables()
+    new_game = Display.new
+    winner = GameLogic.new
+    board = new_game.board
+    puts new_game.tabletop
+    p1_name = ask_name('One')
+    p2_name = ask_name('Two')
+    game_status = winner.game_status
+    [new_game, winner, board, p1_name, p2_name, game_status]
+  end
+
+  def break_game(new_game, winner, draw, name)
+    if winner == true
+      puts "#{name} wins this round!"
+      puts new_game.tabletop
+      true
+    elsif draw == true
+      puts 'Draw!'
+      puts new_game.tabletop
+      true
+    end
+  end
+
+  def new_round()
+    new_game, winner, board, p1_name, p2_name, game_status = create_variables
+
+    puts new_game.tabletop
+
+    while game_status
+      p1_row, p1_column = ask_play(p1_name)
+      player_move(board, 'x', p1_row, p1_column, p1_name)
+      winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
+      drawp1 = winner.check_draw(board, p1_row, p1_column, 'x')
+      break if break_game(new_game, winnerp1, drawp1, p1_name)
+
+      puts "Nex player's turn!"
+      puts new_game.tabletop
+
+      p2_row, p2_column = ask_play(p2_name)
+      player_move(board, 'o', p2_row, p2_column, p2_name)
+      winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
+      drawp2 = winner.check_draw(board, p2_row, p2_column, 'x')
+      break if break_game(new_game, winnerp2, drawp2, p2_name)
+
+      puts "Nex player's turn!"
+      puts new_game.tabletop
+    end
+  end
+
+  def start_game()
+    greeting_msg
+    new_round
+    puts 'Want to play another round? y/n'
+    another_round = gets.chomp
+    if another_round == 'y'
+      new_round
+    else
+      puts 'See you next time!'
+    end
+  end
+end
+
+class GameNew
+  include UserInputs
+  include PlayGame
+
+  def game()
+    start_game
+  end
+end
+
+GameNew.new.game
