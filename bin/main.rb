@@ -61,18 +61,6 @@ module PlayGame
     [new_game, winner, board, p1_name, p2_name, game_status]
   end
 
-  def break_game(new_game, winner, draw, name)
-    if winner == true
-      puts "#{name} wins this round!"
-      puts new_game.tabletop
-      true
-    elsif draw == true
-      puts 'Draw!'
-      puts new_game.tabletop
-      true
-    end
-  end
-
   def new_round()
     new_game, winner, board, p1_name, p2_name, game_status = create_variables
 
@@ -83,7 +71,7 @@ module PlayGame
       player_move(board, 'x', p1_row, p1_column, p1_name)
       winnerp1 = winner.check_winner(board, p1_row, p1_column, 'x')
       drawp1 = winner.check_draw(board, p1_row, p1_column, 'x')
-      break if break_game(new_game, winnerp1, drawp1, p1_name)
+      break if winner.break_game(new_game, winnerp1, drawp1, p1_name)
 
       puts "Nex player's turn!"
       puts new_game.tabletop
@@ -92,7 +80,7 @@ module PlayGame
       player_move(board, 'o', p2_row, p2_column, p2_name)
       winnerp2 = winner.check_winner(board, p2_row, p2_column, 'o')
       drawp2 = winner.check_draw(board, p2_row, p2_column, 'x')
-      break if break_game(new_game, winnerp2, drawp2, p2_name)
+      break if winner.break_game(new_game, winnerp2, drawp2, p2_name)
 
       puts "Nex player's turn!"
       puts new_game.tabletop
