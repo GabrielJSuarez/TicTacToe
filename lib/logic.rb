@@ -53,15 +53,4 @@ class GameLogic
     false if row1 || row2 || row3
   end
 
-  def break_game(new_game, winner, draw, name)
-    if winner == true
-      puts "#{name} wins this round!"
-      puts new_game.tabletop
-      true
-    elsif draw == true
-      puts 'Draw!'
-      puts new_game.tabletop
-      true
-    end
-  end
 end
