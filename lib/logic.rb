@@ -50,6 +50,10 @@ class GameLogic
     row2 = board[1].include?('-')
     row3 = board[2].include?('-')
 
-    false if row1 || row2 || row3
+    if row1 || row2 || row3
+      false
+    else
+      true
+    end
   end
 end
