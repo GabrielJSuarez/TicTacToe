@@ -56,8 +56,12 @@ describe GameLogic do
 
   describe "#winner?" do
     context "p1 won" do
-      let(:p1_winner) do
-        subject.check_winner(board, p_row, p_column, simbol)
+      let(:p1_wins) do
+        subject.check_winner(board, "1", "2", "x")
+      end
+
+      let(:p1_does_not_wins) do
+        subject.check_winner(board, "1", "2", "o")
       end
 
       let(:board) {
@@ -68,65 +72,39 @@ describe GameLogic do
         ]
       }
 
-      let(:p_row) { '1' }
-
-      let(:p_column) { '2' }
-
-      let(:simbol) { 'x' }
-
-      example 'non draw game' do
-        expect(p1_winner).to be true
+      example 'p1 wins' do
+        expect(p1_wins).to be true
       end
 
-      
+      example 'p1 loses' do
+        expect(p1_does_not_wins).to be false
+      end
     end
 
     context "p2 won" do
-      let(:p2_winner) do
-        subject.check_winner(board, p_row, p_column, simbol)
+      let(:p2_wins) do
+        subject.check_winner(board, "1", "1", "o")
+      end
+
+      let(:p2_does_not_wins) do
+        subject.check_winner(board, "1", "1", "x")
       end
 
       let(:board) {
         [
-          %w[o o o],
-          %w[- - -],
-          %w[- - -]
+          %w[o x x],
+          %w[o - -],
+          %w[o - -]
         ]
       }
 
-      let(:p_row) { '1' }
+      example 'p2 wins' do
+        expect(p2_wins).to be true
+      end
 
-      let(:p_column) { '2' }
-
-      let(:simbol) { 'o' }
-
-      example 'non draw game' do
-        expect(p2_winner).to be true
+      example 'p2 loses' do
+        expect(p2_does_not_wins).to be false
       end
     end
   end
 end
-
-# let(:board_2) {
-#   [
-#     %w[x - -],
-#     %w[x - -],
-#     %w[x - -]
-#   ]
-# }
-
-# let(:board_3) {
-#   [
-#     %w[x - -],
-#     %w[- x -],
-#     %w[- - x]
-#   ]
-# }
-
-# let(:board_4) {
-#   [
-#     %w[- - x],
-#     %w[- x -],
-#     %w[x - -]
-#   ]
-# }
