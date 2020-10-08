@@ -26,13 +26,13 @@ class GameLogic
     col1 = board[0][column.to_i - 1]
     col2 = board[1][column.to_i - 1]
     col3 = board[2][column.to_i - 1]
-    diag1 = board[0][0], board[1][1], board[2][2]
-    diag2 = board[0][2], board[1][1], board[2][0]
+    diag1 = [board[0][0], board[1][1], board[2][2]]
+    diag2 = [board[0][2], board[1][1], board[2][0]]
 
     winningmove1 = row.all?(simbol)
     winningmove2 = [col1, col2, col3].all?(simbol)
-    winningmove3 = [diag1].all?(simbol)
-    winningmove4 = [diag2].all?(simbol)
+    winningmove3 = diag1.all?(simbol)
+    winningmove4 = diag2.all?(simbol)
 
     winner1 = winningmove1 || winningmove2
     winner2 = winningmove3 || winningmove4
@@ -50,6 +50,10 @@ class GameLogic
     row2 = board[1].include?('-')
     row3 = board[2].include?('-')
 
-    false if row1 || row2 || row3
+    if row1 || row2 || row3
+      false
+    else
+      true
+    end
   end
 end
